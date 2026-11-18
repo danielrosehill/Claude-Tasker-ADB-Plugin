@@ -4,6 +4,12 @@ Operate [Tasker](https://tasker.joaoapps.com/) on an Android phone from Claude C
 reads the screen with `uiautomator`, taps and types through Tasker's own editor, then tests the result.
 No root, no plugins on the phone, no hand-written XML.
 
+## Install
+
+```
+/plugin install tasker-adb --marketplace danielrosehill/Claude-Code-Plugins
+```
+
 ## Skills
 
 | Skill | Use |
