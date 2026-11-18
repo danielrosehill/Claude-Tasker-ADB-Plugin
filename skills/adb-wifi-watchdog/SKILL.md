@@ -53,3 +53,5 @@ on its own.
 2. Press Play on the task: within ~15 s, `settings get global adb_wifi_enabled` should read `1`.
 3. Leave Tasker, set it to 0 again, and wait up to 10 minutes for the timer to set it back to 1.
 4. Note the result with the date and the phone model.
+
+Validated 2026-11-18 on an Android 16 phone with Tasker 6.7.9: Play restored the setting in under 15 s; with Tasker closed, the timer restored it about 8 minutes after it was switched off.
