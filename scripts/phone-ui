@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+# phone-ui: read and drive an Android screen over adb, for operating apps like Tasker with no API.
+#
+#   phone-ui dump                 visible nodes: [bounds] C(lickable) resource-id 'text' desc=...
+#   phone-ui checked ID           checked state of every node whose resource-id ends in ID
+#   phone-ui tap X Y              tap
+#   phone-ui long X Y [MS]        long-press (default 1000 ms); selects a Tasker action
+#   phone-ui swipe X1 Y1 X2 Y2    scroll (300 ms)
+#   phone-ui text 'STR'           type into the focused field (spaces handled)
+#   phone-ui clear                select-all + delete in the focused field
+#   phone-ui key KEY              keyevent: back=4 home=3 enter=66 del=67, or a KEYCODE_ name
+#   phone-ui start PKG            open the app's main launcher activity
+#   phone-ui focus                package/activity in front
+#
+# Device: $ADB_SERIAL (ip:port or USB serial); unset = adb's default device.
+set -u
+A=(adb); [ -n "${ADB_SERIAL:-}" ] && A=(adb -s "$ADB_SERIAL")
+sh() { "${A[@]}" shell "$@"; }
+
+dump_xml() { sh uiautomator dump /sdcard/phone-ui.xml >/dev/null 2>&1; sh cat /sdcard/phone-ui.xml; }
+
+case "${1:-}" in
+  dump)
+    dump_xml | python3 -c '
+import sys, re, html
+x = sys.stdin.read()
+for m in re.finditer(r"<node [^>]*>", x):
+    n = m.group(0)
+    g = lambda a: html.unescape((re.search(a + r"=\"([^\"]*)\"", n) or [None, ""])[1])
+    t, d, b, c = g("text"), g("content-desc"), g("bounds"), g("clickable")
+    r = g("resource-id").split("/")[-1]
+    if t or d or (c == "true" and r):
+        print(b, ("C " if c == "true" else "  ") + r, repr(t) if t else "", ("desc=" + d) if d else "")
+' ;;
+  checked)
+    dump_xml | grep -oE "resource-id=\"[^\"]*${2}\"[^>]*checked=\"[a-z]+\"" | grep -oE 'checked="[a-z]+"' ;;
+  tap)   sh input tap "$2" "$3" ;;
+  long)  sh input swipe "$2" "$3" "$2" "$3" "${4:-1000}" ;;
+  swipe) sh input swipe "$2" "$3" "$4" "$5" 300 ;;
+  text)  sh input text "$(printf '%s' "$2" | sed 's/ /%s/g')" ;;
+  clear) sh input keycombination 113 29; sh input keyevent 67 ;;   # CTRL_LEFT+A, DEL (Android 13+)
+  key)   sh input keyevent "$2" ;;
+  start)
+    act=$(sh cmd package resolve-activity --brief -c android.intent.category.LAUNCHER "$2" | tail -1 | tr -d '\r')
+    sh am start -n "$act" >/dev/null ;;
+  focus) sh dumpsys window | grep -m1 mCurrentFocus ;;
+  *) sed -n '2,14p' "$0"; exit 2 ;;
+esac

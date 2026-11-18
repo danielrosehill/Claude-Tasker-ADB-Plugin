@@ -1,0 +1,13 @@
+{
+  "name": "tasker-adb",
+  "description": "Operate Tasker on an Android phone over ADB: build and edit profiles, tasks and actions by driving Tasker's editor, and test them. Includes a wireless-debugging watchdog recipe.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Daniel Rosehill",
+    "email": "public@danielrosehill.com",
+    "url": "https://danielrosehill.com"
+  },
+  "license": "MIT",
+  "repository": "https://github.com/danielrosehill/Claude-Tasker-ADB-Plugin",
+  "keywords": ["tasker", "android", "adb", "automation", "uiautomator"]
+}
