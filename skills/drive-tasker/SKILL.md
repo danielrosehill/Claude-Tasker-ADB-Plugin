@@ -56,8 +56,8 @@ while the secret shows in an unmasked field. Confirm which field has focus befor
   it's offered, otherwise `OK`/`NO`.
 - **The keyboard covers the lower fields.** After typing in a field, press BACK (`mobile_press_button`
   BACK or `phone-ui key 4`) to close the keyboard, then list the elements before tapping the next field.
-  Press BACK only while the keyboard is open: with no keyboard up it leaves the screen, and can leave Tasker. Otherwise the tap goes to the keyboard, and the
-  next text ends up in the field you just filled.
+  Otherwise the tap goes to the keyboard, and the next text ends up in the field you just filled. Press
+  BACK only while the keyboard is open: with no keyboard up it leaves the screen, and can leave Tasker.
 - **Replace a field's text** with tap → `phone-ui clear` → type. Typing into a non-empty field appends.
 - **Number pickers** (Time context From/To) don't reliably take typed values. Untick From/To when
   they aren't needed: "Every N minutes" alone is accepted.
