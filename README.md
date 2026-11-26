@@ -1,7 +1,9 @@
 # tasker-adb
 
-Operate [Tasker](https://tasker.joaoapps.com/) on an Android phone from Claude Code over ADB. Claude
-reads the screen with `uiautomator`, taps and types through Tasker's own editor, then tests the result.
+Operate [Tasker](https://tasker.joaoapps.com/) on an Android phone from Claude Code. Claude reads the
+screen as an element list, taps and types through Tasker's own editor, then tests the result. It drives
+the screen through a [mobile-mcp](https://github.com/mobile-next/mobile-mcp) server when one is connected,
+and falls back to ADB (`uiautomator` + `input`) through the bundled `phone-ui` helper.
 No root, no plugins on the phone, no hand-written XML.
 
 ## Install
@@ -19,6 +21,7 @@ No root, no plugins on the phone, no hand-written XML.
 
 ## Requirements
 
+- Recommended: a mobile-mcp server connected to the phone, for reading the screen and tapping.
 - `adb` connected to the phone (USB or wireless), and `python3` on the same machine.
 - Tasker installed on the phone. Settings actions need `WRITE_SECURE_SETTINGS`:
   `adb shell pm grant net.dinglisch.android.taskerm android.permission.WRITE_SECURE_SETTINGS`
